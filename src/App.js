@@ -49,9 +49,9 @@ const ChatApp = () => {
       <div style={{
           position: 'sticky',
           top: 0,
-          padding: '10px',
           background: '#fff',
           zIndex: 1000,
+          paddingBottom: "20px"
         }}>
         <p>GPT Role: {systemRole}</p>
         <form onSubmit={handleSystemRoleSubmit}>
@@ -78,6 +78,7 @@ const ChatApp = () => {
           type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
+          style={{ width: '100%' }}
         />
         <select
           value={selectedModel}
@@ -96,7 +97,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Hello GPT</h1>
         <ChatApp />
       </header>
     </div>
