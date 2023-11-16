@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.floating-panel {
+  position: sticky;
+}
