@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import OpenAI from "openai";
+import ReactMarkdown from 'react-markdown';
 
 const openai = new OpenAI({ apiKey: `${process.env.REACT_APP_OPENAI_API_KEY}`, dangerouslyAllowBrowser: true });
 
@@ -7,18 +8,22 @@ const ChatApp = () => {
   const [userInput, setUserInput] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [selectedModel, setSelectedModel] = useState("gpt-3.5-turbo");
-  const [systemRole, setSystemRole] = useState("You are a helpful assistant.");
-
+  const [systemRole, setSystemRole] = useState("You are better version of wikiHow. " + 
+  "With a given query, you will respond in different methods if possible. Each methods will have steps and sub steps. Etc.");
+  const outputFormat = "\n Your output message will have Markdown format. For each step, right a sumarry of all the sub steps."
   const chat = async (chatPrompt, model) => {
     var message = [
-      { role: "system", content: `${systemRole}` },
+      { role: "system", content: `${systemRole}` + outputFormat },
       { role: "user", content: chatPrompt}
     ]
+    console.log(message)
+
     const completion = await openai.chat.completions.create({
       messages: message,
       model: model,
     });
-    console.log(message)
+    
+    console.log(completion.choices[0].message.content)
     return completion.choices[0].message.content;
   };
 
@@ -59,6 +64,12 @@ const ChatApp = () => {
             type="text"
             value={systemRoleInput}
             onChange={(e) => setSystemRoleInput(e.target.value)}
+            style={{
+              display: 'block',
+              resize: 'both',
+              overflow: 'auto',
+              width: '90%',
+            }}
           />
           <button type="submit">Set System Role</button>
         </form>
@@ -68,7 +79,9 @@ const ChatApp = () => {
           <div key={index}>
             <strong>User:</strong> {entry.user}
             <br />
-            <strong>Response:</strong> {entry.response}
+            <strong>Response:</strong> 
+            {/* <div style={{ whiteSpace: 'pre-line' }}>{entry.response}</div> */}
+            <ReactMarkdown>{entry.response}</ReactMarkdown>
             <hr />
           </div>
         ))}
